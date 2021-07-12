@@ -41,3 +41,13 @@ Start time: `2:00 pm`
 Finish time: `4:30 pm`
 
 Actual time needed to complete: `2 hours, 30 minutes`
+
+Name of feature: `Recieving Data from mongoDB `
+
+Estimate of time needed to complete: `1 hour`
+
+Start time: `4:30 pm`
+
+Finish time: `7:00 pm`
+
+Actual time needed to complete: `2 hours,30 minutes`
