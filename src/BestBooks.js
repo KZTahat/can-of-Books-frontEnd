@@ -1,7 +1,7 @@
 import React from "react";
-import axios from "axios";
+// import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Card from "react-bootstrap/Card";
+import { Card, Button } from "react-bootstrap";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import { withAuth0 } from "@auth0/auth0-react";
 import "./BestBooks.css";
@@ -20,12 +20,13 @@ class MyFavoriteBooks extends React.Component {
   //     `${process.env.REACT_APP_SERVER}/books?email=${this.props.auth0.user.email}`
   //   );
   //   console.log(response.data);
-  //   this.setState({      
+  //   this.setState({
   //     userBooks: response.data,
   //   });
   // };
 
   render() {
+    console.log(this.props.userBooks);
     return (
       <Jumbotron>
         <h1>My Favorite Books</h1>
@@ -36,13 +37,13 @@ class MyFavoriteBooks extends React.Component {
         >
           Add Book
         </button>
-        {this.props.userBooks.map((element) => {
+        {this.props.userBooks.map((element, index) => {
           return (
-            <>
+            <div key={index} style={{ display: "inline-block" }}>
               <Card
                 style={{
                   width: "18rem",
-                  display: "inline-block",
+                  // display: "inline-block",
                   margin: "30px",
                 }}
               >
@@ -52,8 +53,14 @@ class MyFavoriteBooks extends React.Component {
                   <Card.Text>description: {element.description}</Card.Text>
                   <Card.Text>Status: {element.status}</Card.Text>
                 </Card.Body>
+                <Button
+                  variant="danger"
+                  onClick={() => this.props.deleteBook(index)}
+                >
+                  Delete
+                </Button>
               </Card>
-            </>
+            </div>
           );
         })}
       </Jumbotron>

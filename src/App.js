@@ -22,11 +22,12 @@ class App extends React.Component {
     let response = await axios.get(
       `${process.env.REACT_APP_SERVER}/books?email=kztahat96@gmail.com`
     );
-    console.log(response.data);
     this.setState({
       userBooks: response.data,
     });
   };
+
+  // Show and hide Model
   showModel = () => {
     this.setState({
       show: true,
@@ -37,6 +38,8 @@ class App extends React.Component {
       show: false,
     });
   };
+
+  // Add New Book
   addBook = async (event) => {
     event.preventDefault();
     const newBookData = {
@@ -55,7 +58,23 @@ class App extends React.Component {
       userBooks: newResponse.data,
     });
   };
-  //
+
+  // Delete Selected Book
+  deleteBook = async (index) => {
+    let paramsObj = {
+      email: this.props.auth0.user.email,
+    };
+    const response = await axios.delete(
+      `${process.env.REACT_APP_SERVER}/deletebook/${index}`,
+      { params: paramsObj }
+    );
+    console.log(response);
+    this.setState({
+      userBooks: response.data,
+    });
+  };
+
+  // Rendering Info
   render() {
     // console.log('app', this.props);
     const isAuthenticated = this.props.auth0.isAuthenticated;
@@ -76,6 +95,7 @@ class App extends React.Component {
                 <MyFavoriteBooks
                   showModel={this.showModel}
                   userBooks={this.state.userBooks}
+                  deleteBook={this.deleteBook}
                 />
               ) : (
                 <Login />
