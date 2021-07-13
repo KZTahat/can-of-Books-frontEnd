@@ -51,3 +51,13 @@ Start time: `4:30 pm`
 Finish time: `7:00 pm`
 
 Actual time needed to complete: `2 hours,30 minutes`
+
+Name of feature: `POST-DELETE`
+
+Estimate of time needed to complete: `1 hour`
+
+Start time: `2:20 pm`
+
+Finish time: `7:30`
+
+Actual time needed to complete: `5 hours (pair)`

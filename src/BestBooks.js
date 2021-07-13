@@ -1,50 +1,49 @@
 import React from "react";
-import axios from "axios";
+// import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Card from "react-bootstrap/Card";
+import { Card, Button } from "react-bootstrap";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import { withAuth0 } from "@auth0/auth0-react";
 import "./BestBooks.css";
 
 class MyFavoriteBooks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userBooks: [],
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     userBooks: [],
+  //   };
+  // }
 
-  async componentDidMount() {
-    let response = await axios.get(
-      `${process.env.REACT_APP_SERVER}/books?email=kztahat96@gmail.com`
-    );
-    console.log(response.data);
-    this.setState({
-      userBooks: response.data,
-    });
-    // .then((element) => {
-    //   console.log("element.data " + element);
-    //   this.setState({
-    //     userBooks: element.data,
-    //   });
-    //   console.log("this.userBooks " + this.state.userBooks);
-    // })
-    // .catch((error) => {
-    //   console.log("inside the error ", error);
-    // });
-  }
+  // componentDidMount = async () => {
+  //   console.log(this.props.auth0.user.email);
+  //   let response = await axios.get(
+  //     `${process.env.REACT_APP_SERVER}/books?email=${this.props.auth0.user.email}`
+  //   );
+  //   console.log(response.data);
+  //   this.setState({
+  //     userBooks: response.data,
+  //   });
+  // };
 
   render() {
+    console.log(this.props.userBooks);
     return (
       <Jumbotron>
         <h1>My Favorite Books</h1>
         <p>This is a collection of my favorite books</p>
-        {this.state.userBooks.map((element) => {
+        <button
+          style={{ position: "absolute", top: "150px", left: "560px" }}
+          onClick={this.props.showModel}
+        >
+          Add Book
+        </button>
+        {this.props.userBooks.map((element, index) => {
           return (
-            <>
+            <div key={index} style={{ display: "inline-block" }}>
               <Card
                 style={{
                   width: "18rem",
-                  display: "inline-block",
+                  // display: "inline-block",
                   margin: "30px",
                 }}
               >
@@ -54,8 +53,14 @@ class MyFavoriteBooks extends React.Component {
                   <Card.Text>description: {element.description}</Card.Text>
                   <Card.Text>Status: {element.status}</Card.Text>
                 </Card.Body>
+                <Button
+                  variant="danger"
+                  onClick={() => this.props.deleteBook(index)}
+                >
+                  Delete
+                </Button>
               </Card>
-            </>
+            </div>
           );
         })}
       </Jumbotron>
@@ -63,4 +68,4 @@ class MyFavoriteBooks extends React.Component {
   }
 }
 
-export default MyFavoriteBooks;
+export default withAuth0(MyFavoriteBooks);
