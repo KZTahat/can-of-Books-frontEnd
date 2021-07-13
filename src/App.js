@@ -6,14 +6,66 @@ import Footer from "./Footer";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./Login";
 import Profile from "./Componenets/Profile";
+import Model from "./Componenets/Model";
+import axios from "axios";
 
 class App extends React.Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      userBooks: [],
+    };
+  }
+  componentDidMount = async () => {
+    // console.log(this.props.auth0.user.email);
+    let response = await axios.get(
+      `${process.env.REACT_APP_SERVER}/books?email=kztahat96@gmail.com`
+    );
+    console.log(response.data);
+    this.setState({
+      userBooks: response.data,
+    });
+  };
+  showModel = () => {
+    this.setState({
+      show: true,
+    });
+  };
+  hideModel = () => {
+    this.setState({
+      show: false,
+    });
+  };
+  addBook = async (event) => {
+    event.preventDefault();
+    const newBookData = {
+      bookName: event.target.bookName.value,
+      description: event.target.description.value,
+      imgUrl: event.target.imgUrl.value,
+      state: event.target.state.value,
+      email: this.props.auth0.user.email,
+    };
+    console.log(newBookData);
+    const newResponse = await axios.post(
+      `${process.env.REACT_APP_SERVER}/addbook`,
+      newBookData
+    );
+    this.setState({
+      userBooks: newResponse.data,
+    });
+  };
+  //
   render() {
     // console.log('app', this.props);
     const isAuthenticated = this.props.auth0.isAuthenticated;
     return (
       <>
+        <Model
+          hideModel={this.hideModel}
+          show={this.state.show}
+          addBook={this.addBook}
+        ></Model>
         <Router>
           {/* <IsLoadingAndError> */}
           <Header />
@@ -21,7 +73,10 @@ class App extends React.Component {
             <Route exact path="/">
               {/* if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
               {isAuthenticated ? (
-                <MyFavoriteBooks/>
+                <MyFavoriteBooks
+                  showModel={this.showModel}
+                  userBooks={this.state.userBooks}
+                />
               ) : (
                 <Login />
               )}
