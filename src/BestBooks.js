@@ -7,13 +7,16 @@ import { withAuth0 } from "@auth0/auth0-react";
 import Model from "./Componenets/Model";
 import axios from "axios";
 import "./BestBooks.css";
+import UpdateForm from "./Componenets/UpdateForm";
 
 class MyFavoriteBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       show: false,
+      showUpdateForm: false,
       userBooks: [],
+      index: 0,
     };
   }
 
@@ -27,7 +30,6 @@ class MyFavoriteBooks extends React.Component {
       userBooks: response.data,
     });
   };
-
   // Show and hide Model
   showModel = () => {
     this.setState({
@@ -39,7 +41,6 @@ class MyFavoriteBooks extends React.Component {
       show: false,
     });
   };
-
   // Add New Book
   addBook = async (event) => {
     event.preventDefault();
@@ -57,9 +58,9 @@ class MyFavoriteBooks extends React.Component {
     );
     this.setState({
       userBooks: newResponse.data,
+      show: false,
     });
   };
-
   // Delete Selected Book
   deleteBook = async (index) => {
     let paramsObj = {
@@ -74,8 +75,34 @@ class MyFavoriteBooks extends React.Component {
       userBooks: response.data,
     });
   };
-
-  render() {    
+  // SHOW UPDATE FORM
+  showUpdateModel = (index) => {
+    this.setState({
+      showUpdateForm: true,
+      index: index,
+    });
+  };
+  // Update Selected Book
+  updateBook = async (event) => {
+    event.preventDefault();
+    const updatedBookData = {
+      bookName: event.target.bookName.value,
+      description: event.target.description.value,
+      imgUrl: event.target.imgUrl.value,
+      state: event.target.state.value,
+      email: this.props.auth0.user.email,
+    };
+    let response = await axios.put(
+      `${process.env.REACT_APP_SERVER}/updatebook/${this.state.index}`,
+      updatedBookData
+    );
+    this.setState({
+      userBooks: response.data,
+      showUpdateForm: false,
+    });
+  };
+  // Rendering Stuff
+  render() {
     return (
       <Jumbotron>
         <Model
@@ -91,6 +118,13 @@ class MyFavoriteBooks extends React.Component {
         >
           Add Book
         </button>
+        {this.state.showUpdateForm && (
+          <UpdateForm
+            index={this.state.index}
+            data={this.state.userBooks}
+            updateBook={this.updateBook}
+          ></UpdateForm>
+        )}
         {this.state.userBooks.map((element, index) => {
           return (
             <div key={index} style={{ display: "inline-block" }}>
@@ -107,11 +141,14 @@ class MyFavoriteBooks extends React.Component {
                   <Card.Text>description: {element.description}</Card.Text>
                   <Card.Text>Status: {element.status}</Card.Text>
                 </Card.Body>
-                <Button
-                  variant="danger"
-                  onClick={() => this.deleteBook(index)}
-                >
+                <Button variant="danger" onClick={() => this.deleteBook(index)}>
                   Delete
+                </Button>
+                <Button
+                  variant="success"
+                  onClick={() => this.showUpdateModel(index)}
+                >
+                  Update
                 </Button>
               </Card>
             </div>
