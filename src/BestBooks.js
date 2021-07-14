@@ -17,6 +17,7 @@ class MyFavoriteBooks extends React.Component {
     };
   }
 
+  // Component DID MOUNT function : to get the data once entered 
   componentDidMount = async () => {
     console.log(this.props.auth0.user.email);
     let response = await axios.get(
