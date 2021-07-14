@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Button, Card } from "react-bootstrap";
 
 class Model extends React.Component {
+
   render() {
     return (
       <>
